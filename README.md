@@ -1,28 +1,14 @@
-# TWB Web demos
+# TILES demo
 
-A static simple website to demonstrate TWB's language technology services:
-
-- [Automatic speech recognition (ASR-API)](https://github.com/translatorswb/ASR-API)
-- [Automatic speech recognition (MT-API)](https://github.com/translatorswb/TWB-MT-fastapi)
-
-## Requirements
-
-Required modules are listed in `requirements.txt`
+A static simple front-end/back-end for TILES
 
 ## Installation & Usage
 
 Clone repository and install required modules
 ```bash
-$ git clone https://github.com/translatorswb/web-demos.git
-$ cd web-demos
+$ git clone https://github.com/translatorswb/TILES-demo.git
+$ cd TILES-demo
 $ pip install -r requirements.txt
-```
-
-If you want to connect the API's, specify their URL endpoints in `.env`. (You can skip this if you like)
-
-```bash
-MT_API_URL=http://localhost:8001/api/v1/translate
-ASR_API_URL=http://localhost:8010/transcribe/
 ```
 
 Run the server
@@ -31,21 +17,16 @@ Run the server
 $ uvicorn app.main:app --reload --port 8080
 ```
 
+or simply
+```bash
+$ bash run.sh
+```
+
 Visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
 
 ## Author
 
 [Alp Öktem](https://alpoktem.github.io)
-
-## Sources
-
-Main site architecture by [Shinichi Okada](https://github.com/shinokada/fastapi-web-starter) 
-
-Audio recording logic by [addpipe](https://github.com/addpipe/simple-web-audio-recorder-demo)
-
-Kaldi-web interface by [dtreskunov](https://github.com/dtreskunov)
-
-English model by [Alpha Cepei](https://alphacephei.com/vosk/models)
 
 ## Disclaimer
 
