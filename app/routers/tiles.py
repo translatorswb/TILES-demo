@@ -22,7 +22,7 @@ RESPONSE_TSV_PATH = 'data/answers.tsv'
 #             "cherry tomato":["cherry", "tomato", "tomatoes"], "mint":["mint"], "jalapeno":["jalapeno", "pepper"]}
 
 def say(text):
-    url = RHASSPY_URL + "api/text-to-speech"
+    url = RHASSPY_URL + "/api/text-to-speech"
     requests.post(url, text)
 
 def read_response_data(tsv_path):
@@ -37,8 +37,6 @@ def read_response_data(tsv_path):
 
 response_data = read_response_data(RESPONSE_TSV_PATH)
 
-print(response_data)
-
 @router.get("/tilesrpi", response_class=HTMLResponse)
 def get_tiles(request: Request, intent: Optional[str] = None):
     
@@ -49,10 +47,13 @@ def post_tiles(intentstr: str = Form(...)):
     intentobj = json.loads(intentstr)
     intent = intentobj['intent']['name']
     slots = intentobj['slots']
+    
+    print("intent", intent)
 
     response = response_data.get(intent)
 
     if response:
+        print("response", response)
         say(response)
         return {"found":False, "id": ""}
     else:
