@@ -13,7 +13,6 @@ mimetypes.init()
 
 app = FastAPI()
 
-
 templates = Jinja2Templates(directory="templates")
 
 mimetypes.add_type('application/javascript', '.js')
