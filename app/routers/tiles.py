@@ -3,9 +3,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import requests
 import json
-from dotenv import load_dotenv
+import os
 from typing import Optional
-load_dotenv()
+
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates/")
@@ -13,7 +13,9 @@ templates = Jinja2Templates(directory="templates/")
 AUDIO_EXTS = ['.wav', '.WAV'] #Can be extended
 
 RHASSPY_URL = "http://localhost:12101"
-RESPONSE_TSV_PATH = 'data/answers.tsv'
+RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/answers.tsv'
+
+print('Responses path:', RESPONSE_TSV_PATH)
 
 # garden = {"cherry tomato": "X7Hr9X4I1NY", "orchids": "LxkLc3arKHU", "roses": "OYbbldGNbr8", "mint": "Hw3HXrdt20o", "jalapeno": "i6NrodYFNhg",
 #           "idea":"LdxltzhYjHE", "ants":"62A2_gKuBaU"}
@@ -23,7 +25,7 @@ RESPONSE_TSV_PATH = 'data/answers.tsv'
 
 def say(text):
     url = RHASSPY_URL + "/api/text-to-speech"
-    requests.post(url, text)
+    requests.post(url, text.encode('utf-8'))
 
 def read_response_data(tsv_path):
     import csv
