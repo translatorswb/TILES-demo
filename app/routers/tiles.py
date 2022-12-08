@@ -29,12 +29,24 @@ def say(text):
 
 def read_response_data(tsv_path):
     import csv
-
+    row_no = 1
+    results = {}
     with open(tsv_path, newline='') as pscfile:
-        reader = csv.reader(pscfile, delimiter='\t')
-        next(reader)
-        results = dict(reader)  # pull in each row as a key-value pair
-
+        for line in pscfile.readlines():
+            try:
+                key, val = line.strip().split('\t')
+                results[key] = val
+            except:
+                print("problem in row", row_no)
+                print(line)
+            row_no += 1
+        #reader = csv.reader(pscfile, delimiter='\t')
+        #next(reader)
+        #try:
+        #    results = dict(reader)  # pull in each row as a key-value pair
+        #except:
+        #    print("problem in row
+        
     return results
 
 response_data = read_response_data(RESPONSE_TSV_PATH)
