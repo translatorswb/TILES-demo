@@ -1,0 +1,58 @@
+version: '3.3'
+
+services:
+
+  
+  opentts:
+    image: synesthesiam/opentts:hi
+    ports:
+      - 5500:5500  
+    expose:
+      - 5500
+    networks:
+      - api-network
+
+      
+  tiles:
+    build: ./
+    command: uvicorn app.main:app --reload --port 8080 --host 0.0.0.0
+    # command: uvicorn main:app --host 0.0.0.0 --port 8000
+    # command: "tail -F anything"
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    container_name: tilesdemo
+    networks:
+      - api-network
+    environment:
+      - RESPONSETSV=/app/data/rhasspy_responses_hin.tsv
+
+
+  rhasspy:
+    image: "rhasspy/rhasspy"
+    container_name: rhasspy
+    restart: unless-stopped
+    volumes:
+        - "$HOME/.config/rhasspy/profiles:/profiles"
+        - "/etc/localtime:/etc/localtime:ro"
+    expose: 
+        - 12101
+    ports:
+        - "12101:12101"
+    devices:
+        - "/dev/snd:/dev/snd"
+    command: --user-profiles /profiles --profile hi
+    networks: 
+      - api-network
+    
+    
+networks:
+  api-network:
+    external: true
+      
+      
+  
+
+
