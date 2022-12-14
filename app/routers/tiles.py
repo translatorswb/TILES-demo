@@ -6,7 +6,6 @@ import json
 import os
 from typing import Optional
 
-
 router = APIRouter()
 templates = Jinja2Templates(directory="templates/")
 
@@ -16,12 +15,6 @@ RHASSPY_URL = os.environ.get('RHASSPYURL') or "http://localhost:12101"
 RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/answers.tsv'
 
 print('Responses path:', RESPONSE_TSV_PATH)
-
-# garden = {"cherry tomato": "X7Hr9X4I1NY", "orchids": "LxkLc3arKHU", "roses": "OYbbldGNbr8", "mint": "Hw3HXrdt20o", "jalapeno": "i6NrodYFNhg",
-#           "idea":"LdxltzhYjHE", "ants":"62A2_gKuBaU"}
-
-# keywords = {"idea":["idea", "ideas", "start"], "ants":["ant", "ants"], "roses":["roses", "rose"], 
-#             "cherry tomato":["cherry", "tomato", "tomatoes"], "mint":["mint"], "jalapeno":["jalapeno", "pepper"]}
 
 def say(text):
     url = RHASSPY_URL + "/api/text-to-speech"
@@ -40,12 +33,6 @@ def read_response_data(tsv_path):
                 print("problem in row", row_no)
                 print(line)
             row_no += 1
-        #reader = csv.reader(pscfile, delimiter='\t')
-        #next(reader)
-        #try:
-        #    results = dict(reader)  # pull in each row as a key-value pair
-        #except:
-        #    print("problem in row
         
     return results
 
@@ -73,26 +60,3 @@ def post_tiles(intentstr: str = Form(...)):
     else:
         print("ERROR: intent answer not specified")
 
-    # if intent == 'Grow' and slots['plant'] in garden:
-    #     plant = slots['plant']
-    #     print(intent, plant)
-
-    #     say("Here's a video on how to grow" + plant)
-
-    #     video_id = garden.get(plant)
-    #     print('video_id', video_id)
-    #     return {"found":True, "id": video_id}
-    # elif intent == 'Prevent':
-    #     toprevent = slots['toprevent']
-    #     print(intent, toprevent)
-
-    #     say("Here's some tips on how to stop" + toprevent)
-
-    #     video_id = garden.get(toprevent)
-    #     print('video_id', video_id)
-    #     return {"found":True, "id": video_id}
-    # elif intent == 'Stop':
-    #     print("Stop")
-    #     return {"found":False, "id":""}
-    # else:
-    #     return {"found":False, "id":""}
