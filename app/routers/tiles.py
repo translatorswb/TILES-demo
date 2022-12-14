@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory="templates/")
 
 AUDIO_EXTS = ['.wav', '.WAV'] #Can be extended
 
-RHASSPY_URL = "http://localhost:12101"
+RHASSPY_URL = os.environ.get('RHASSPYURL') or "http://localhost:12101"
 RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/answers.tsv'
 
 print('Responses path:', RESPONSE_TSV_PATH)

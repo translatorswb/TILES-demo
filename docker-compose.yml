@@ -28,6 +28,7 @@ services:
       - api-network
     environment:
       - RESPONSETSV=/app/data/rhasspy_responses_hin.tsv
+      - RHASSPYURL="http://rhasspy:12101"
 
 
   rhasspy:
