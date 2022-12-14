@@ -8,11 +8,9 @@
 {% endblock %}
 
 {% block page_content %}
-<h1>What do you want to grow?</h1>
+<h1>TILES demo</h1>
 <br>
-I can guide you to videos about gardening. 
-<br>
-Activate me by saying "porcupine" and then say something like "I want to grow roses", "How do I stop ants?"
+Say namaste and then ask your question
 <pre id="log"></pre> 
 
 <ul id='messages'></ul>
@@ -25,14 +23,6 @@ Activate me by saying "porcupine" and then say something like "I want to grow ro
 {% block scripts %}
 {{ super() }}
 
-<!-- <script src="/static/js/tilesapp.js">
-let fd = new FormData();
-fd.append('message', 'some message');
-// dostuff(fd);
-// if (this._oneshot) {
-//     this._recognizer.setActive(false).then(updateButton)
-// }
-</script> -->
 <script>
     function dostuff (formdata) {
         var v = document.getElementById("video-placeholder");
@@ -49,8 +39,8 @@ fd.append('message', 'some message');
         var messages = document.getElementById('messages')
         var message = document.createElement('li')
         var content = document.createTextNode(event.data) 
-        // var jsonobj = JSON.parse(event.data);
-        // console.log(event.data)
+        var jsonobj = JSON.parse(event.data);
+        console.log(event.data)
         // message.appendChild(content)
         // messages.appendChild(message)
         let fd = new FormData();
