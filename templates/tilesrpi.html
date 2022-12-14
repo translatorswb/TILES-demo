@@ -14,21 +14,11 @@ I can guide you to videos about gardening.
 <br>
 Activate me by saying "porcupine" and then say something like "I want to grow roses", "How do I stop ants?"
 <pre id="log"></pre> 
-<!-- {{ text }}
-{{ videoid }} -->
-
-<!-- <button onclick="stopVideo();return false;">Click me</button> -->
-<!-- <div id="video" style="position: fixed;left:50%;height: 400px; transform: translate(-50%, 0%);"></div> -->
-<!-- <div class="youtube" id="LcIytqkbdlo" style="width:560px; height: 315px;"></div> -->
-<!-- <iframe width="420" height="345" src="http://www.youtube.com/embed/oHg5SJYRHA0?autoplay=1" frameborder="0" allowfullscreen></iframe> -->
-
-<!-- <iframe src="//www.youtube.com/embed/oHg5SJYRHA0?autoplay=1&mute=1" name="youtube embed" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
 
 <ul id='messages'></ul>
 
 <div id="video-placeholder"  style="display:none"></div> 
 
-<script src="https://www.youtube.com/iframe_api"></script>
 
 {% endblock %}
 
@@ -45,7 +35,14 @@ fd.append('message', 'some message');
 </script> -->
 <script>
     function dostuff (formdata) {
-        
+        var v = document.getElementById("video-placeholder");
+        $.ajax({
+          url: 'tilesrpi/intent',
+          type: 'post',
+          data: formdata,
+          contentType: false,
+          processData: false
+        });
     }
     var ws = new WebSocket("ws://localhost:12101/api/events/intent");
     ws.onmessage = function(event) {
