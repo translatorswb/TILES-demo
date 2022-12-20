@@ -5,6 +5,7 @@ services:
   
   opentts:
     image: synesthesiam/opentts:hi
+    user: root
     ports:
       - 5500:5500  
     expose:
@@ -28,8 +29,9 @@ services:
       - api-network
     environment:
       - RESPONSETSV=/app/data/rhasspy_responses_hin.tsv
-      - RHASSPYURL="http://rhasspy:12101"
-
+      - RHASSPY_URL='http://rhasspy:12101'
+    volumes: 
+      - ./:/app
 
   rhasspy:
     image: "rhasspy/rhasspy"
