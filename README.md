@@ -2,6 +2,10 @@
 
 A static simple front-end/back-end for TILES
 
+## Installation & Usage with docker compose
+
+...
+
 ## Installation & Usage
 
 Clone repository and install required modules
