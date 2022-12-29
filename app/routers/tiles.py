@@ -4,8 +4,9 @@ from fastapi.templating import Jinja2Templates
 import requests
 import json
 import os
-import pygame
 from typing import Optional
+from pydub import AudioSegment
+from pydub.playback import play 
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates/")
@@ -14,7 +15,7 @@ AUDIO_EXTS = ['.wav', '.WAV'] #Can be extended
 
 RHASSPY_URL = os.environ.get('RHASSPYURL') or "http://rhasspy:12101"
 RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/covid_hin.tsv'
-ANSWERS_AUDIO_PATH = os.environ.get('AUDIODIR') or 'data/audio'
+ANSWERS_AUDIO_PATH = os.environ.get('AUDIODIR') or './audio'
 
 if os.path.exists(RESPONSE_TSV_PATH):
     print('Responses path:', RESPONSE_TSV_PATH)
@@ -30,12 +31,16 @@ def say(text):
     url = RHASSPY_URL + "/api/text-to-speech"
     requests.post(url, text.encode('utf-8'))
 
-def play(audio):
-    pygame.mixer.init()
-    pygame.mixer.music.load(audio)
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy() == True:
-        continue
+# def play(audio):
+#     pygame.mixer.init()
+#     pygame.mixer.music.load(audio)
+#     pygame.mixer.music.play()
+#     while pygame.mixer.music.get_busy() == True:
+#         continue
+
+# def play(audio):
+#     toplay = AudioSegment.from_mp3(audio)
+#     play(toplay)
 
 def read_response_data(tsv_path):
     import csv
@@ -85,16 +90,22 @@ def post_tiles(intentstr: str = Form(...)):
         print("response", response)
         if response['audio']:
             full_audio_path = os.path.abspath(os.path.join(ANSWERS_AUDIO_PATH, response['audio']))
+
             if os.path.exists(full_audio_path):
                 print("play", full_audio_path)
-                play(full_audio_path)
+                # TODO: Plays directly from python. It'd be much better to play from the front-end
+                audioseg = AudioSegment.from_mp3(full_audio_path)
+                play(audioseg)
+                return {"found":True, "id": intent, "audio": full_audio_path}
             else:
-                print(f"Couldn't file audio for intent {intent} in path {full_audio_path}. Using TTS instead")
+                print(f"Couldn't find audio file for intent {intent} in path {full_audio_path}. Using TTS instead")
                 say(response['text'])
+                return {"found":False, "id": intent, "audio": None}
         else:
             print("say", response['text'])
             say(response['text'])
-        return {"found":False, "id": ""}
+            return {"found":False, "id": intent, "audio": None}
     else:
         print("Answer not specified for intent", intent)
+        return {"found":False, "id": intent, "audio": None}
 

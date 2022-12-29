@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 {% set active_page = "tilesrpi" %}
 
-{% block title %}Transcribe{% endblock %}
+{% block title %}TILES{% endblock %}
 
 {% block head %}
 {{ super() }}
 {% endblock %}
 
 {% block page_content %}
-<h1>TILES demo</h1>
+<h1>TILES</h1>
 <br>
-Say namaste and then ask your question
+Say namaste and then ask your question.
+<br>
+For example:
+<br>
+<br>
+<em>जलवायु परिवर्तन किसे कहते हैं ?</em>
+<br>
+<em>जलवायु परिवर्तन के मुख्य खतरे क्या हैं ?</em> 
+<br>
+<em>क्या जलवायु परिवर्तन के कारण जानवरों की प्रजातियां खत्म हो रही हैं?</em>
+<br>
+
 <pre id="log"></pre> 
 
 <ul id='messages'></ul>
