@@ -7,3 +7,4 @@ python-multipart==0.0.5
 jinja2==3.0.1
 Markdown==3.3.4
 httpx==0.16.1
+pydub==0.25.1
