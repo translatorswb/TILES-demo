@@ -102,7 +102,7 @@ def post_tiles(intentstr: str = Form(...)):
                 say(response['text'])
                 return {"found":False, "id": intent, "audio": None}
         else:
-            print("say", response['text'])
+            print(f"No audio file specified for intent {intent}. Using TTS instead")
             say(response['text'])
             return {"found":False, "id": intent, "audio": None}
     else:

@@ -31,6 +31,8 @@ services:
       - RESPONSETSV=/app/data/answers_climate_hin.tsv
       - RHASSPY_URL=http://rhasspy:12101
       - AUDIODIR=/app/audio
+    devices:
+        - "/dev/snd:/dev/snd"
     volumes: 
       - ./:/app
       - ../TILES-audio:/app/audio

@@ -42,7 +42,23 @@ For example:
           type: 'post',
           data: formdata,
           contentType: false,
-          processData: false
+          processData: false,
+          success: function(data){
+            if (data.found) {
+                videoId = data.id;
+                console.log(data.id)
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var content = document.createTextNode(data.id) 
+                message.appendChild(content)
+                messages.appendChild(message)
+
+                // const audio = new Audio(data.audio);
+                // audio.play(); 
+            }else{
+                console.log("noaudio")
+            }
+          }
         });
     }
     var ws = new WebSocket("ws://localhost:12101/api/events/intent");
