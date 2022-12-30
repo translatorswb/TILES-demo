@@ -35,8 +35,7 @@ For example:
 {{ super() }}
 
 <script>
-    function dostuff (formdata) {
-        var v = document.getElementById("video-placeholder");
+    function processintent(formdata) {
         $.ajax({
           url: 'tilesrpi/intent',
           type: 'post',
@@ -45,22 +44,36 @@ For example:
           processData: false,
           success: function(data){
             if (data.found) {
-                videoId = data.id;
-                console.log(data.id)
+                console.log('intent ', data.id)
+
+                // Show recognized intent on the log pane (for debugging)
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
                 var content = document.createTextNode(data.id) 
                 message.appendChild(content)
                 messages.appendChild(message)
-
-                // const audio = new Audio(data.audio);
-                // audio.play(); 
-            }else{
-                console.log("noaudio")
+                
+                // Code to show an image or video should be placed here
+                console.log('show ' + data.imageid)
+                
             }
           }
         });
     }
+
+    function playaudio(formdata) {
+        $.ajax({
+          url: 'tilesrpi/play',
+          type: 'post',
+          data: formdata,
+          contentType: false,
+          processData: false,
+          success: function(data){
+            // Any action after the audio play stops
+          }
+        });
+    }
+
     var ws = new WebSocket("ws://localhost:12101/api/events/intent");
     ws.onmessage = function(event) {
         var messages = document.getElementById('messages')
@@ -72,7 +85,12 @@ For example:
         // messages.appendChild(message)
         let fd = new FormData();
         fd.append('intentstr', event.data);
-        dostuff(fd);
+        processintent(fd);
+
+        let fd2 = new FormData();
+        // fd2.append('intentid', 'myintentid');
+        // fd2.append('audiopath', 'audiopath');
+        playaudio(fd2);
     };
 
     var wakesocket = new WebSocket("ws://localhost:12101/api/events/wake");
