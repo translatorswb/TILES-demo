@@ -56,6 +56,18 @@ For example:
                 // Code to show an image or video should be placed here
                 console.log('show ' + data.imageid)
                 
+            }else{
+                // Intent not recognized
+                console.log('intent not recognized')
+
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var content = document.createTextNode('intent not recognized!') 
+                message.appendChild(content)
+                messages.appendChild(message)
+
+                // Code to show an image or video should be placed here
+                console.log('show ' + data.imageid)
             }
           }
         });

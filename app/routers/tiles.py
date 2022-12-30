@@ -16,6 +16,8 @@ AUDIO_EXTS = ['.wav', '.WAV'] #Can be extended
 RHASSPY_URL = os.environ.get('RHASSPYURL') or "http://rhasspy:12101"
 RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/covid_hin.tsv'
 ANSWERS_AUDIO_PATH = os.environ.get('AUDIODIR') or './audio'
+INTENT_FALLBACK_AUDIO_PATH = os.environ.get('FALLBACKAUDIOPATH') or '___'
+INTENT_FALLBACK_TEXT = "मुझे वह समझ में नहीं आया। क्या आप फिर से दोहरा सकते हैं? मैं जलवायु परिवर्तन के बारे में आपके सवालों का जवाब दे सकता हूं।"
 TTSFALLBACK = True
 
 last_intentid = None
@@ -128,6 +130,7 @@ def check_intent(intentstr: str = Form(...)):
         last_intentid = intent
         return {"found":True, "id": intent, "imageid": "imageid:"+intent}
     else:
+        last_intentid = None
         return {"found":False, "id": intent, "imageid": "imageid:"+intent}
 
 @router.post("/tilesrpi/play")
@@ -153,5 +156,18 @@ def audio_play():
             print(f"No audio file specified for intent {intent}. Using TTS instead")
             say(response_data[last_intentid]['text'])
             return {}
+    else:
+        full_audio_path = INTENT_FALLBACK_AUDIO_PATH
+        if os.path.exists(full_audio_path):
+            print("play", full_audio_path)
+            # TODO: Plays directly from python. It'd be much better to play from the front-end
+            audioseg = AudioSegment.from_mp3(full_audio_path)
+            play(audioseg)
+            return {}
+        elif TTSFALLBACK:
+            print(f"Couldn't find audio file for fallback in path {full_audio_path}. Using TTS instead")
+            say(INTENT_FALLBACK_TEXT)
+            return {}
+
 
 
