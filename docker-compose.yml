@@ -31,7 +31,7 @@ services:
       - RESPONSETSV=/app/data/answers_climate_hin.tsv
       - RHASSPY_URL=http://rhasspy:12101
       - AUDIODIR=/app/audio
-      - FALLBACKAUDIOPATH=/app/data/fallback_hin_climate.mp3
+      - FALLBACKAUDIOPATH=/app/data/GV_fallback_hin_climate.mp3
     devices:
         - "/dev/snd:/dev/snd"
     volumes: 
