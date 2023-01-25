@@ -16,7 +16,7 @@ services:
       
   tiles:
     build: ./
-    command: uvicorn app.main:app --reload --port 8080 --host 0.0.0.0
+    command: uvicorn app.main:app --reload --port 8080 --host 0.0.0.0  --log-config logging.conf
     # command: uvicorn main:app --host 0.0.0.0 --port 8000
     # command: "tail -F anything"
     restart: unless-stopped
@@ -32,11 +32,13 @@ services:
       - RHASSPY_URL=http://rhasspy:12101
       - AUDIODIR=/app/audio
       - FALLBACKAUDIOPATH=/app/data/GV_fallback_hin_climate.mp3
+      - SKIPAUDIOPLAY=0
     devices:
         - "/dev/snd:/dev/snd"
     volumes: 
       - ./:/app
       - ../TILES-audio:/app/audio
+      - ./applog.log:/app/applog.log
 
   rhasspy:
     image: "rhasspy/rhasspy"

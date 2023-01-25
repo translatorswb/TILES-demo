@@ -6,10 +6,12 @@ import json
 import os
 from typing import Optional
 from pydub import AudioSegment
-from pydub.playback import play 
+from pydub.playback import play
+import logging 
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates/")
+logger = logging.getLogger(__name__) 
 
 AUDIO_EXTS = ['.wav', '.WAV'] #Can be extended
 
@@ -22,31 +24,38 @@ TTSFALLBACK = True
 
 last_intentid = None
 
+#Debug flags
+SKIPAUDIOPLAY = os.environ.get('SKIPAUDIOPLAY') or 0
+if SKIPAUDIOPLAY == "1":
+    msg = f"DEBUG: Skipping audio play"
+    print(msg)
+    logger.warning(msg)
+    SKIPAUDIOPLAY = True
+else:
+    SKIPAUDIOPLAY = False
 
 if os.path.exists(RESPONSE_TSV_PATH):
-    print('Responses path:', RESPONSE_TSV_PATH)
+    msg = f"Responses path: {RESPONSE_TSV_PATH}"
+    print(msg)
+    logger.info(msg)
 else:
-    print("Responses file not found", RESPONSE_TSV_PATH)
+    msg = f"Responses file not found: {RESPONSE_TSV_PATH}"
+    print(msg)
+    logger.warning(msg)
 
 if os.path.exists(ANSWERS_AUDIO_PATH) and os.path.isdir(ANSWERS_AUDIO_PATH):
-    print('Audio responses path:', ANSWERS_AUDIO_PATH)
+    msg = f"Audio responses path: {ANSWERS_AUDIO_PATH}"
+    print(msg)
+    logger.info(msg)
 else:
-    print("Audio responses path not found", ANSWERS_AUDIO_PATH)
+    msg = f"Audio responses path not found: {ANSWERS_AUDIO_PATH}"
+    print(msg)
+    logger.warning(msg)
 
 def say(text):
     url = RHASSPY_URL + "/api/text-to-speech"
     requests.post(url, text.encode('utf-8'))
-
-# def play(audio):
-#     pygame.mixer.init()
-#     pygame.mixer.music.load(audio)
-#     pygame.mixer.music.play()
-#     while pygame.mixer.music.get_busy() == True:
-#         continue
-
-# def play(audio):
-#     toplay = AudioSegment.from_mp3(audio)
-#     play(toplay)
+    logger.info(f"TTS: {text}")
 
 def read_response_data(tsv_path):
     import csv
@@ -68,11 +77,15 @@ def read_response_data(tsv_path):
 
                 results[intent_id] = {'text': answer, 'audio': audio_path}
             except:
-                print("problem in row", row_no)
-                print(line)
+                msg = f"problem in row {row_no}: {line}"
+                print(msg)
+                logger.error(msg)
             row_no += 1
         
-    print("Successfully read answers sheet. #intents:", len(results))
+    msg = f"Successfully read answers sheet. #intents: {len(results)}"
+    print(msg)
+    logger.info(msg)
+    
     return results
 
 response_data = read_response_data(RESPONSE_TSV_PATH)
@@ -82,52 +95,23 @@ def get_tiles(request: Request, intent: Optional[str] = None):
     
     return templates.TemplateResponse('tilesrpi.html', context={'request': request})
 
-# @router.post("/tilesrpi/intent")
-# def post_tiles(intentstr: str = Form(...)):
-#     intentobj = json.loads(intentstr)
-#     intent = intentobj['intent']['name']
-#     slots = intentobj['slots']
-    
-#     print("intent", intent)
-
-#     response = response_data.get(intent)
-
-#     if response:
-#         print("response", response)
-#         if response['audio']:
-#             full_audio_path = os.path.abspath(os.path.join(ANSWERS_AUDIO_PATH, response['audio']))
-
-#             if os.path.exists(full_audio_path):
-#                 print("play", full_audio_path)
-#                 # TODO: Plays directly from python. It'd be much better to play from the front-end
-#                 audioseg = AudioSegment.from_mp3(full_audio_path)
-#                 play(audioseg)
-#                 return {"found":True, "id": intent, "audio": full_audio_path}
-#             elif TTSFALLBACK:
-#                 print(f"Couldn't find audio file for intent {intent} in path {full_audio_path}. Using TTS instead")
-#                 say(response['text'])
-#                 return {"found":True, "id": intent, "audio": None}
-#         elif TTSFALLBACK:
-#             print(f"No audio file specified for intent {intent}. Using TTS instead")
-#             say(response['text'])
-#             return {"found":True, "id": intent, "audio": None}
-#     else:
-#         print("Answer not specified for intent", intent)
-#         return {"found":False, "id": intent, "audio": None}
-
 @router.post("/tilesrpi/intent")
 def check_intent(intentstr: str = Form(...)):
     global last_intentid
     intentobj = json.loads(intentstr)
     intent = intentobj['intent']['name']
     slots = intentobj['slots']
-    
-    print("intent", intent)
+    conf = intentobj['intent']['confidence']
+        
+    msg = f"QUERY: {intentobj['text']}, INTENT: {intent}, CONF:{conf:.2f}"
+    print(msg)
+    logger.info(msg)
 
     response = response_data.get(intent)
 
     if response:
         last_intentid = intent
+        
         return {"found":True, "id": intent, "imageid": "imageid:"+intent}
     else:
         last_intentid = None
@@ -136,37 +120,51 @@ def check_intent(intentstr: str = Form(...)):
 @router.post("/tilesrpi/play")
 def audio_play():
     global last_intentid
-    print('>audio_play', last_intentid)
 
     if last_intentid:
         if response_data[last_intentid]['audio']:
             full_audio_path = os.path.abspath(os.path.join(ANSWERS_AUDIO_PATH, response_data[last_intentid]['audio']))
 
             if os.path.exists(full_audio_path):
-                print("play", full_audio_path)
+                msg = f"PLAY: {full_audio_path}"
+                print(msg)
+                logger.info(msg)
                 # TODO: Plays directly from python. It'd be much better to play from the front-end
                 audioseg = AudioSegment.from_mp3(full_audio_path)
-                play(audioseg)
+                if not SKIPAUDIOPLAY:
+                    play(audioseg)
                 return {}
             elif TTSFALLBACK:
-                print(f"Couldn't find audio file for intent {intent} in path {full_audio_path}. Using TTS instead")
+                msg = f"Couldn't find audio file for intent {intent} in path {full_audio_path}. Using TTS instead"
+                print(msg)
+                logger.warning(msg)
                 say(response_data[last_intentid]['text'])
                 return {}
         elif TTSFALLBACK:
-            print(f"No audio file specified for intent {intent}. Using TTS instead")
+            msg = f"No audio file specified for intent {intent}. Using TTS instead"
+            print(msg)
+            logger.warning(msg)
+            
             say(response_data[last_intentid]['text'])
             return {}
     else:
         full_audio_path = INTENT_FALLBACK_AUDIO_PATH
         if os.path.exists(full_audio_path):
-            print("play", full_audio_path)
+            msg = f"PLAY: {full_audio_path}"
+            print(msg)
+            logger.info(msg)
             # TODO: Plays directly from python. It'd be much better to play from the front-end
             audioseg = AudioSegment.from_mp3(full_audio_path)
-            play(audioseg)
+            if not SKIPAUDIOPLAY:
+                play(audioseg)
             return {}
         elif TTSFALLBACK:
-            print(f"Couldn't find audio file for fallback in path {full_audio_path}. Using TTS instead")
-            say(INTENT_FALLBACK_TEXT)
+            msg = f"Couldn't find audio file for fallback in path {full_audio_path}. Using TTS instead"
+            print(msg)
+            logger.warning(msg)
+            
+            if not SKIPAUDIOPLAY:
+                say(INTENT_FALLBACK_TEXT)
             return {}
 
 

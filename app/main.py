@@ -2,7 +2,6 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
 from .library.helpers import openfile
 from app.routers import tiles
 from dotenv import load_dotenv
@@ -10,6 +9,7 @@ load_dotenv()
 
 import mimetypes
 mimetypes.init() 
+
 
 app = FastAPI()
 

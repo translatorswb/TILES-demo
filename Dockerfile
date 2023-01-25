@@ -16,4 +16,3 @@ RUN apt-get install --no-install-recommends -y ffmpeg
 RUN pip install -r /app/requirements_strict.txt --no-deps \
     && rm -rf /root/.cache/pip
 
-COPY . /app/

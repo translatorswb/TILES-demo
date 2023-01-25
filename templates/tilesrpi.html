@@ -84,8 +84,28 @@ For example:
           }
         });
     }
+    
+    const waitForOpenConnection = (socket) => {
+    return new Promise((resolve, reject) => {
+        const maxNumberOfAttempts = 10
+        const intervalTime = 200 //ms
+
+        let currentAttempt = 0
+        const interval = setInterval(() => {
+            if (currentAttempt > maxNumberOfAttempts - 1) {
+                clearInterval(interval)
+                reject(new Error('Maximum number of attempts exceeded'))
+            } else if (socket.readyState === socket.OPEN) {
+                clearInterval(interval)
+                resolve()
+            }
+            currentAttempt++
+        }, intervalTime)
+    })
+}
 
     var ws = new WebSocket("ws://localhost:12101/api/events/intent");
+    
     ws.onmessage = function(event) {
         var messages = document.getElementById('messages')
         var message = document.createElement('li')
