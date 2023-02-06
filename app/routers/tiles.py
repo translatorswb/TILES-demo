@@ -18,12 +18,13 @@ AUDIO_EXTS = ['.wav', '.WAV'] #Can be extended
 RHASSPY_URL = os.environ.get('RHASSPYURL') or "http://rhasspy:12101"
 RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/covid_hin.tsv'
 ANSWERS_AUDIO_PATH = os.environ.get('AUDIODIR') or './audio'
-INTENT_FALLBACK_AUDIO_PATH = os.environ.get('FALLBACKAUDIOPATH') or '___'
+INTENT_FALLBACK_AUDIO_PATH = os.environ.get('FALLBACKAUDIOPATH') or ''
 INTENT_FALLBACK_TEXT = "मुझे वह समझ में नहीं आया। क्या आप फिर से दोहरा सकते हैं? मैं जलवायु परिवर्तन के बारे में आपके सवालों का जवाब दे सकता हूं।"
 TTSFALLBACK = True
 
 last_intentid = None
 
+print("=======TILES-DEMO=======")
 #Debug flags
 SKIPAUDIOPLAY = os.environ.get('SKIPAUDIOPLAY') or 0
 if SKIPAUDIOPLAY == "1":
@@ -49,6 +50,15 @@ if os.path.exists(ANSWERS_AUDIO_PATH) and os.path.isdir(ANSWERS_AUDIO_PATH):
     logger.info(msg)
 else:
     msg = f"Audio responses path not found: {ANSWERS_AUDIO_PATH}"
+    print(msg)
+    logger.warning(msg)
+    
+if INTENT_FALLBACK_AUDIO_PATH and os.path.exists(INTENT_FALLBACK_AUDIO_PATH):
+    msg = f"Fallback audio path: {INTENT_FALLBACK_AUDIO_PATH}"
+    print(msg)
+    logger.info(msg)
+else:
+    msg = f"Fallback audio path not found: {INTENT_FALLBACK_AUDIO_PATH}"
     print(msg)
     logger.warning(msg)
 
@@ -82,7 +92,8 @@ def read_response_data(tsv_path):
                 logger.error(msg)
             row_no += 1
         
-    msg = f"Successfully read answers sheet. #intents: {len(results)}"
+    msg = f"Successfully read answers sheet. #intents: {len(results)}"\
+           "\n========================"
     print(msg)
     logger.info(msg)
     
@@ -126,7 +137,7 @@ def audio_play():
             full_audio_path = os.path.abspath(os.path.join(ANSWERS_AUDIO_PATH, response_data[last_intentid]['audio']))
 
             if os.path.exists(full_audio_path):
-                msg = f"PLAY: {full_audio_path}"
+                msg = f"PLAY: {full_audio_path}\n--------------------------"
                 print(msg)
                 logger.info(msg)
                 # TODO: Plays directly from python. It'd be much better to play from the front-end
@@ -149,8 +160,8 @@ def audio_play():
             return {}
     else:
         full_audio_path = INTENT_FALLBACK_AUDIO_PATH
-        if os.path.exists(full_audio_path):
-            msg = f"PLAY: {full_audio_path}"
+        if full_audio_path:
+            msg = f"PLAY: {full_audio_path}\n--------------------------"
             print(msg)
             logger.info(msg)
             # TODO: Plays directly from python. It'd be much better to play from the front-end
