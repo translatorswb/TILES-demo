@@ -20,7 +20,7 @@ RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/covid_hin.tsv'
 ANSWERS_AUDIO_PATH = os.environ.get('AUDIODIR') or './audio'
 INTENT_FALLBACK_AUDIO_PATH = os.environ.get('FALLBACKAUDIOPATH') or ''
 INTENT_FALLBACK_TEXT = "मुझे वह समझ में नहीं आया। क्या आप फिर से दोहरा सकते हैं? मैं जलवायु परिवर्तन के बारे में आपके सवालों का जवाब दे सकता हूं।"
-TTSFALLBACK = True
+TTSFALLBACK = os.environ.get('TTSFALLBACK') or 0
 
 last_intentid = None
 
@@ -62,6 +62,14 @@ else:
     print(msg)
     logger.warning(msg)
 
+if TTSFALLBACK == "1":
+    msg = f"Fallback with TTS on"
+    print(msg)
+    logger.warning(msg)
+    TTSFALLBACK = True
+else:
+    TTSFALLBACK = False
+    
 def say(text):
     url = RHASSPY_URL + "/api/text-to-speech"
     requests.post(url, text.encode('utf-8'))
