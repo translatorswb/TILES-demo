@@ -4,4 +4,4 @@ export AUDIODIR="../TILES-audio"
 export FALLBACKAUDIOPATH=""
 export SKIPAUDIOPLAY=1
 export TTSFALLBACK=0
-uvicorn app.main:app --reload --port 8080 --log-config logging.conf
+uvicorn app.main:app --reload --port 8080

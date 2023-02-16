@@ -136,6 +136,21 @@ def check_intent(intentstr: str = Form(...)):
         last_intentid = None
         return {"found":False, "id": intent, "imageid": "imageid:"+intent}
 
+@router.post("/tilesrpi/wake")
+def wake_request():
+    url = RHASSPY_URL + "/api/listen-for-command"
+    try:
+        requests.post(url)
+        logger.info(f"WAKE")
+        print("WAKE")
+        return {"connection":True}
+    except:
+        msg = f"ERROR: Couldn't establish connection with rhasspy on {url}"
+        logger.info(msg)
+        print(msg)
+        return {"connection":False} ## CHANGE TO FALSESS
+
+
 @router.post("/tilesrpi/play")
 def audio_play():
     global last_intentid
