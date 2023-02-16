@@ -22,8 +22,8 @@ For example:
 <br> -->
 
 <div id="video-placeholder" class="video">
- <video width="100%" controls loop>
-  <source src="static/TILES.mp4" type="video/mp4">
+ <video id="video-player" width="100%" controls loop>
+  <source src="static/TILES_withspeech.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video> 
 </div> 
@@ -40,8 +40,11 @@ For example:
 
 <script>
     const button = document.getElementById('post-btn');
+    const player = document.getElementById('video-player');
 
     button.onclick = function(formdata){
+        button.disabled = true;
+        player.pause();
         $.ajax({
           url: 'tilesrpi/wake',
           type: 'post',
@@ -53,10 +56,8 @@ For example:
             console.log("After wakeup")
             if (data.connection) {
                 console.log('rhasspy connected')
-                button.disabled = true;
             }else{
                 console.log('rhasspy not connected')
-                button.disabled = true;
                 
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
@@ -87,7 +88,7 @@ For example:
                 messages.appendChild(message)
                 
                 // Code to show an image or video should be placed here
-                console.log('show ' + data.imageid)
+                // console.log('show ' + data.imageid)
                 
             }else{
                 // Intent not recognized
@@ -100,7 +101,7 @@ For example:
                 messages.appendChild(message)
 
                 // Code to show an image or video should be placed here
-                console.log('show ' + data.imageid)
+                // console.log('show ' + data.imageid)
             }
           }
         });
@@ -116,6 +117,7 @@ For example:
           success: function(data){
             // Any action after the audio play stops
             button.disabled = false
+            player.play();
           }
         });
     }
