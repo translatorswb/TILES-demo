@@ -53,14 +53,19 @@ else:
     print(msg)
     logger.warning(msg)
     
-if INTENT_FALLBACK_AUDIO_PATH and os.path.exists(INTENT_FALLBACK_AUDIO_PATH):
-    msg = f"Fallback audio path: {INTENT_FALLBACK_AUDIO_PATH}"
+if INTENT_FALLBACK_AUDIO_PATH:
+    if os.path.exists(INTENT_FALLBACK_AUDIO_PATH):
+        msg = f"Fallback audio path: {INTENT_FALLBACK_AUDIO_PATH}"
+        print(msg)
+        logger.info(msg)
+    else:
+        msg = f"Fallback audio path not found: {INTENT_FALLBACK_AUDIO_PATH}"
+        print(msg)
+        logger.warning(msg)
+else:
+    msg = f"Fallback audio path: NOT SPECIFIED"
     print(msg)
     logger.info(msg)
-else:
-    msg = f"Fallback audio path not found: {INTENT_FALLBACK_AUDIO_PATH}"
-    print(msg)
-    logger.warning(msg)
 
 if TTSFALLBACK == "1":
     msg = f"Fallback with TTS on"
@@ -100,8 +105,7 @@ def read_response_data(tsv_path):
                 logger.error(msg)
             row_no += 1
         
-    msg = f"Successfully read answers sheet. #intents: {len(results)}"\
-           "\n========================"
+    msg = f"Successfully read answers sheet. #intents: {len(results)}"
     print(msg)
     logger.info(msg)
     
