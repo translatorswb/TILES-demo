@@ -196,11 +196,11 @@ li {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 100px;
+  height: 200px;
   border: none;
   background-color: #c17f15;
   padding: 14px 28px;
-  font-size: 32px;
+  font-size: 60px;
   cursor: pointer;
   text-align: center;
 }
@@ -208,7 +208,7 @@ li {
 .video {
   margin: auto;
 
-  width: 90%;
+  width: 100%;
   text-align: center;
 }
 
