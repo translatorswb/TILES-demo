@@ -8,18 +8,6 @@
 {% endblock %}
 
 {% block page_content %}
-<!-- <h1><img  align="left" src="static/images/logo.png" alt="CLEAR Global logo" height="45px">TILES</h1> -->
-<!-- Say namaste and then ask your question.
-<br>
-For example:
-<br>
-<br>
-<em>जलवायु परिवर्तन किसे कहते हैं ?</em>
-<br>
-<em>जलवायु परिवर्तन के मुख्य खतरे क्या हैं ?</em> 
-<br>
-<em>क्या जलवायु परिवर्तन के कारण जानवरों की प्रजातियां खत्म हो रही हैं?</em>
-<br> -->
 
 <div id="video-placeholder" class="video">
  <video id="video-player" width="100%" controls loop>
@@ -30,8 +18,8 @@ For example:
 
 <button id="post-btn" class="button">👆 सवाल पूछने के लिए यहाँ दबाएं 👆</button>
 
-<pre id="log"></pre>
-<ul id='messages'></ul>
+<!-- <pre id="log"></pre>
+<ul id='messages'></ul> -->
 
 {% endblock %}
 
@@ -59,11 +47,11 @@ For example:
             }else{
                 console.log('rhasspy not connected')
                 
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode('rhasspy not connected') 
-                message.appendChild(content)
-                messages.appendChild(message)
+                // var messages = document.getElementById('messages')
+                // var message = document.createElement('li')
+                // var content = document.createTextNode('rhasspy not connected') 
+                // message.appendChild(content)
+                // messages.appendChild(message)
             }
           }
         });
@@ -81,11 +69,11 @@ For example:
                 console.log('intent ', data.id)
 
                 // Show recognized intent on the log pane (for debugging)
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode(data.id) 
-                message.appendChild(content)
-                messages.appendChild(message)
+                // var messages = document.getElementById('messages')
+                // var message = document.createElement('li')
+                // var content = document.createTextNode(data.id) 
+                // message.appendChild(content)
+                // messages.appendChild(message)
                 
                 // Code to show an image or video should be placed here
                 // console.log('show ' + data.imageid)
@@ -94,11 +82,11 @@ For example:
                 // Intent not recognized
                 console.log('intent not recognized')
 
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode('intent not recognized!') 
-                message.appendChild(content)
-                messages.appendChild(message)
+                // var messages = document.getElementById('messages')
+                // var message = document.createElement('li')
+                // var content = document.createTextNode('intent not recognized!') 
+                // message.appendChild(content)
+                // messages.appendChild(message)
 
                 // Code to show an image or video should be placed here
                 // console.log('show ' + data.imageid)
