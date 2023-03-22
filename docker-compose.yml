@@ -32,6 +32,7 @@ services:
       - RHASSPY_URL=http://rhasspy:12101
       - AUDIODIR=/app/audio
       - FALLBACKAUDIOPATH=/app/data/GV_fallback_hin_climate.mp3
+      - COMPLETIONAUDIOPATH=/app/data/GV_completion_hin_climate.mp3
       - SKIPAUDIOPLAY=0
       - TTSFALLBACK=0
     devices:

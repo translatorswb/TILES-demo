@@ -19,6 +19,7 @@ RHASSPY_URL = os.environ.get('RHASSPYURL') or "http://rhasspy:12101"
 RESPONSE_TSV_PATH = os.environ.get('RESPONSETSV') or 'data/covid_hin.tsv'
 ANSWERS_AUDIO_PATH = os.environ.get('AUDIODIR') or './audio'
 INTENT_FALLBACK_AUDIO_PATH = os.environ.get('FALLBACKAUDIOPATH') or ''
+RESPONSE_COMPLETION_AUDIO_PATH = os.environ.get('COMPLETIONAUDIOPATH') or ''
 INTENT_FALLBACK_TEXT = "मुझे वह समझ में नहीं आया। क्या आप फिर से दोहरा सकते हैं? मैं जलवायु परिवर्तन के बारे में आपके सवालों का जवाब दे सकता हूं।"
 TTSFALLBACK = os.environ.get('TTSFALLBACK') or 0
 
@@ -64,6 +65,20 @@ if INTENT_FALLBACK_AUDIO_PATH:
         logger.warning(msg)
 else:
     msg = f"Fallback audio path: NOT SPECIFIED"
+    print(msg)
+    logger.info(msg)
+
+if RESPONSE_COMPLETION_AUDIO_PATH:
+    if os.path.exists(RESPONSE_COMPLETION_AUDIO_PATH):
+        msg = f"Response completion audio path: {RESPONSE_COMPLETION_AUDIO_PATH}"
+        print(msg)
+        logger.info(msg)
+    else:
+        msg = f"Response completion audio path not found: {RESPONSE_COMPLETION_AUDIO_PATH}"
+        print(msg)
+        logger.warning(msg)
+else:
+    msg = f"Response completion audio path: NOT SPECIFIED"
     print(msg)
     logger.info(msg)
 
@@ -168,9 +183,12 @@ def audio_play():
                 print(msg)
                 logger.info(msg)
                 # TODO: Plays directly from python. It'd be much better to play from the front-end
-                audioseg = AudioSegment.from_mp3(full_audio_path)
                 if not SKIPAUDIOPLAY:
+                    audioseg = AudioSegment.from_mp3(full_audio_path)
                     play(audioseg)
+                    if RESPONSE_COMPLETION_AUDIO_PATH:
+                        completionseg = os.path.abspath(RESPONSE_COMPLETION_AUDIO_PATH)
+                        play(completionseg)
                 return {}
             elif TTSFALLBACK:
                 msg = f"Couldn't find audio file for intent {intent} in path {full_audio_path}. Using TTS instead"
