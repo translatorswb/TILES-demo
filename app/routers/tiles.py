@@ -179,7 +179,7 @@ def audio_play():
             full_audio_path = os.path.abspath(os.path.join(ANSWERS_AUDIO_PATH, response_data[last_intentid]['audio']))
 
             if os.path.exists(full_audio_path):
-                msg = f"PLAY: {full_audio_path}\n--------------------------"
+                msg = f"PLAY: {full_audio_path}"
                 print(msg)
                 logger.info(msg)
                 # TODO: Plays directly from python. It'd be much better to play from the front-end
@@ -187,8 +187,13 @@ def audio_play():
                     audioseg = AudioSegment.from_mp3(full_audio_path)
                     play(audioseg)
                     if RESPONSE_COMPLETION_AUDIO_PATH:
-                        completionseg = os.path.abspath(RESPONSE_COMPLETION_AUDIO_PATH)
+                        completion_audio_path = RESPONSE_COMPLETION_AUDIO_PATH
+                        msg = f"PLAY: {completion_audio_path}"
+                        print(msg)
+                        logger.info(msg)
+                        completionseg = AudioSegment.from_mp3(completion_audio_path)
                         play(completionseg)
+                print("--------------------------")
                 return {}
             elif TTSFALLBACK:
                 msg = f"Couldn't find audio file for intent {intent} in path {full_audio_path}. Using TTS instead"
