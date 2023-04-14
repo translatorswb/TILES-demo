@@ -4,7 +4,10 @@ A static simple front-end/back-end for TILES
 
 ## Installation & Usage with docker compose
 
-...
+```
+docker compose build
+docker compose up -d
+```
 
 ## Installation & Usage
 
