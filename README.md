@@ -49,6 +49,14 @@ The current TILES demo functions as a Q&A system. The answers need to be specifi
 
 The answers of the audio can be placed under a directory with the same id as the answers in the `tsv` file. It's also possible to use TTS for all or unrecorded answers. In that case the environment variable `TTSFALLBACK` needs to be `1`. 
 
+## Setting up video
+
+TILES plays a video while no interaction is being made. The location of this video is specified in this line of the file `static/tiles.html`:
+
+```html
+  <source src="static/TILES_withspeech.mp4" type="video/mp4">
+```
+
 ## Author
 
 [Alp Öktem](https://alpoktem.github.io), Faizan Ali
