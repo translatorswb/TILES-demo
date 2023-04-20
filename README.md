@@ -4,12 +4,24 @@ A static simple front-end/back-end for TILES
 
 ## Installation & Usage with docker compose
 
+The docker setup runs all the components needed for TILES: 
+
+1. The web app
+2. Rhasspy backend
+3. OpenTTS
+
+Make sure you specify the language code for Rhasspy and OpenTTS in the docker compose file. Check supported languages of [Rhasspy](https://rhasspy.readthedocs.io/en/latest/#supported-languages) and [OpenTTS](https://github.com/synesthesiam/opentts) before. 
+
+To build and run:
+
 ```
 docker compose build
 docker compose up -d
 ```
 
 ## Installation & Usage
+
+In this setup you'd need to run [Rhasspy](https://rhasspy.readthedocs.io/en/latest/installation/) (and OpenTTS if needed) separately. 
 
 Clone repository and install required modules
 ```bash
@@ -29,7 +41,13 @@ or simply
 $ bash run.sh
 ```
 
-Visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
+Visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/) to view the demo.
+
+## Setting up answers and audio
+
+The current TILES demo functions as a Q&A system. The answers need to be specified in a `tsv` format file. Two examples can be seen under `data` directory.
+
+The answers of the audio can be placed under a directory with the same id as the answers in the `tsv` file. It's also possible to use TTS for all or unrecorded answers. In that case the environment variable `TTSFALLBACK` needs to be `1`. 
 
 ## Author
 
